@@ -3,9 +3,9 @@
 Library     MyLibrary
 
 *** Test Cases ***
-test 01
+test03
     [Documentation]     测试自定义包
     ${a}    evaluate         int(4)
     ${b}    evaluate         int(5)
-    ${add}  subtraction     ${a}    ${b}
-    log     ${add}
+    ${res}  subtraction     ${a}    ${b}
+    log     ${res}
