@@ -1,6 +1,9 @@
 
 *** Settings ***
 Library           Selenium2Library
+Library           MyLibrary
+Library           requests
+Library           RequestsLibrary
 
 *** Test Cases ***
 test01
@@ -31,3 +34,42 @@ test02
     comment     拼接字符串
     ${str}      catenate   oracle   mysql   sqlserver
     log  ${str}
+
+test04
+    [Tags]  测试数组
+    ${0}  evaluate  int(10)
+    ${1}  evaluate  int(8)
+#    ${0}  evaluate  ${0}+${1}  #进行加减乘除
+    ${2}  evaluate  int(20)
+#    log  ${0}
+    ${nums}=  Create List  ${0}  ${1}  ${2}
+#    log  ${nums}
+    ${length}=  Get Length  ${nums}
+#    log    ${length}
+    ${sum}  数组求和  ${nums}
+    log  ${sum}
+    run keyword if  ${sum} == 38  log  1
+        ...  ELSE  log  2
+
+
+测试天气
+    [Tags]  上海
+    create session    http://wthrcdn.etouch.cn
+    ${url}  get request  ${api}
+
+
+
+
+*** Keywords ***
+
+数组求和
+    [Arguments]     ${list}
+        ${sum}=  evaluate  int(0)
+#        log  ${sum}
+#        log  ${list}
+        ${length}=  get length  ${list}
+        FOR  ${index}  IN RANGE  ${length}
+#            log  ${list[${index}]}
+            ${sum}  evaluate  ${sum}+${list[${index}]}
+            END
+        [Return]  ${sum}
