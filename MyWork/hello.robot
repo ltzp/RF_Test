@@ -4,6 +4,7 @@ Library           Selenium2Library
 Library           MyLibrary
 Library           requests
 Library           RequestsLibrary
+Library           Collections
 
 *** Test Cases ***
 test01
@@ -52,10 +53,25 @@ test04
         ...  ELSE  log  2
 
 
-测试天气
+测试天气    #测试用例报错，就是直接通不过
     [Tags]  上海
-    create session    http://wthrcdn.etouch.cn
-    ${url}  get request  ${api}
+    ${params}   create dictionary   city=上海                     # 参数解析
+    create session    api   http://wthrcdn.etouch.cn             # 创建请求
+    ${response}  GET On Session  api  /weather_mini    ${params}   # 拼接然后请求
+    should be equal as strings  ${response.status_code}  200
+    log  ${response.content.decode('utf-8')}
+    ${info}  to json   ${response.content.decode('utf-8')}   #返回值转换为json,也就是字典型
+    log  ${info}
+    ${data}  get from dictionary  ${info}  data    # 得到data的值
+    ${flag}  ${msg}  run keyword and ignore error  get from dictionary  ${data}  cmd
+    ${value}  set variable  default
+    ${result}   set variable if  '${flag}'=='FAIL'  ${value}    ${msg}
+    log  ${result}
+
+#    ${forecast}  get from dictionary  ${data}  forecast
+#    ${length}  get length  ${forecast}
+#    log  ${length}
+
 
 
 
